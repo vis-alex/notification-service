@@ -4,6 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.context.annotation.Bean;
+import org.springframework.messaging.Message;
 
 import java.util.function.Consumer;
 
@@ -19,9 +20,9 @@ public class NotificationServiceApplication {
     //Spring cloud stream auto detects and bind it with input (Consumer) or output(Supplier) binder
     //We have to use exact same name as binder for this bean - notification-events
     @Bean
-    public Consumer<String> notificationEventSupplier() {
+    public Consumer<Message<String>> notificationEventSupplier() {
         return message -> {
-            new EmailSender().sendEmail(message);
+            new EmailSender().sendEmail(message.getPayload());
         };
     }
 }
